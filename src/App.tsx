@@ -31,18 +31,33 @@ const formatQuery = (string: string) => {
   return formattedString.split(" ").join("+");
 };
 
+function scrollDown() {
+  alert("Hola");
+  // const { documentElement } = document;
+  // let time = setInterval(() => {
+  //   if (window.scrollY < documentElement.scrollHeight - documentElement.clientHeight) {
+  //     window.scrollBy(0, 1);
+  //   } else {
+  //     clearInterval(time);
+  //   }
+  // }, 10);
+}
+
 function App() {
   // State for the textarea
   const [searchWords, setSearchWords] = useState("");
-  const search = () => {
+  const search = async () => {
     const query = formatQuery(searchWords);
     const googleURL = "https://www.google.com/search?q=" + query;
-    chrome.tabs.create({ url: googleURL });
+    chrome.runtime.sendMessage({
+      type: "new_tab",
+      url: googleURL,
+    })
   };
   return (
-    <div className="py-4 px-8 bg-slate-800 flex flex-col space-y-4">
+    <div className="flex flex-col px-8 py-4 space-y-4 bg-slate-800">
       <textarea
-        className=" py-1 px-2 rounded h-20 resize-none bg-slate-200 placeholder:font-medium placeholder:text-slate-500 focus:placeholder:text-slate-400 focus:outline-none focus:border-2 focus:border-green-500 focus:bg-white"
+        className="h-20 px-2 py-1 rounded resize-none bg-slate-200 placeholder:font-medium placeholder:text-slate-500 focus:placeholder:text-slate-400 focus:outline-none focus:border-2 focus:border-green-500 focus:bg-white"
         placeholder="Palabras a buscar"
         value={searchWords}
         onChange={({ target }) => setSearchWords(target.value)}
